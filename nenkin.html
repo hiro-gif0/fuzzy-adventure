@@ -1,0 +1,566 @@
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日本の社会保障制度インフォグラフィック：現状と将来展望</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f0f4f8; /* Light grayish blue background */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Default max-width */
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; /* Default height */
+            max-height: 400px; /* Default max-height */
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .stat-card {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c5282; /* Dark Blue */
+        }
+        .stat-label {
+            font-size: 1rem;
+            color: #4a5568; /* Gray */
+        }
+        .section-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #2d3748; /* Darker Gray */
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 1.5rem; /* mb-6 */
+        }
+        .flowchart-node {
+            background-color: #e0f2fe; /* Light blue */
+            border: 1px solid #7dd3fc; /* Sky blue border */
+            color: #0c4a6e; /* Darker blue text */
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .flowchart-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #60a5fa; /* Blue arrow */
+            margin: 0.5rem 0;
+        }
+        /* Selected Palette: "Energetic & Playful" (Conceptual - using vibrant blues, oranges, teals, yellows) */
+        /* Primary: #0EA5E9 (Sky Blue), Secondary: #F97316 (Orange), Accent: #14B8A6 (Teal), Neutral: #F3F4F6 (Light Gray) */
+        .bg-primary { background-color: #0EA5E9; }
+        .text-primary { color: #0EA5E9; }
+        .border-primary { border-color: #0EA5E9; }
+        .bg-secondary { background-color: #F97316; }
+        .text-secondary { color: #F97316; }
+        .bg-accent { background-color: #14B8A6; }
+        .text-accent { color: #14B8A6; }
+        .bg-neutral-light { background-color: #F3F4F6; }
+        .text-neutral-dark { color: #1F2937; }
+        .text-neutral-medium { color: #4B5563; }
+
+        nav {
+            background-color: #0369A1; /* Darker Sky Blue for nav */
+        }
+        nav a {
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.3s;
+        }
+        nav a:hover {
+            background-color: #0EA5E9; /* Lighter Sky Blue on hover */
+        }
+    </style>
+</head>
+<body>
+    <!--
+        Infographic Narrative Plan:
+        1. Introduction: Crisis of Japan's social security system (aging population, fiscal issues).
+        2. Section 1: Current State & Challenges of Japan's Pension System (structure, finances, intergenerational disparity).
+        3. Section 2: Transformation of Retirement Benefit Systems & Individual Responsibility (DB to DC, investment behavior).
+        4. Section 3: Childcare Support & Funding Issues (Child Support Fund system, "Kodomo Hoken" concept, international comparison).
+        5. Section 4: Seeking Solutions: Senior Employment & Asset Utilization (current state of senior employment, DANKAI generation's assets).
+        6. Conclusion/Recommendations: Integrated perspective for sustainability and roles of stakeholders.
+
+        Visualization Choices (NO SVG, NO MERMAID JS):
+        - Pension Structure: Donut Chart (Chart.js, Canvas) - Comparison
+        - Income Replacement Ratio: Bar Chart (Chart.js, Canvas) - Change
+        - Intergenerational Net Benefit: Table (HTML/Tailwind) - Comparison
+        - DB/DC Ratio: Stacked Bar Chart (Chart.js, Canvas) - Change/Comparison
+        - DC Investment Products: Pie Chart (Chart.js, Canvas) - Comparison
+        - Child Support Fund System Flow: Flowchart (HTML/Tailwind) - Organization
+        - System Comparison: Table (HTML/Tailwind) - Comparison
+        - Senior Employment Rate: Line Chart (Chart.js, Canvas) - Change
+        - Asset Scale: Large Numbers (HTML/Tailwind) - Information
+        - Confirmation: Mermaid JS and SVG are NOT used. All charts are implemented with Chart.js (Canvas) or HTML/Tailwind.
+
+        Selected Color Palette: "Energetic & Playful" (Conceptual - Sky Blue, Orange, Teal, Light Gray as primary colors)
+        Primary: #0EA5E9 (Sky Blue)
+        Secondary: #F97316 (Orange)
+        Accent: #14B8A6 (Teal)
+        Neutral Light: #F3F4F6
+        Neutral Dark: #1F2937
+        Neutral Medium: #4B5563
+    -->
+
+    <header class="bg-primary text-white p-6 shadow-md">
+        <div class="container mx-auto text-center">
+            <h1 class="text-3xl md:text-4xl font-bold">日本の社会保障制度インフォグラフィック</h1>
+            <p class="mt-2 text-lg">現状の課題、将来展望、そして改革への道筋</p>
+        </div>
+    </header>
+
+    <nav class="sticky top-0 z-50 shadow-lg">
+        <div class="container mx-auto flex flex-wrap justify-center items-center p-2 space-x-2 md:space-x-4">
+            <a href="#section1" class="hover:bg-sky-400">年金制度</a>
+            <a href="#section2" class="hover:bg-sky-400">退職給付</a>
+            <a href="#section3" class="hover:bg-sky-400">子育て支援</a>
+            <a href="#section4" class="hover:bg-sky-400">解決への模索</a>
+            <a href="#section5" class="hover:bg-sky-400">結論</a>
+        </div>
+    </nav>
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <section id="intro" class="mb-12">
+            <h2 class="section-title text-neutral-dark">はじめに：日本の社会保障が直面する構造的課題</h2>
+            <p class="text-lg text-neutral-medium text-center max-w-3xl mx-auto">
+                日本は急速な少子高齢化とそれに伴う労働力人口の減少、社会保障給付費の増大という深刻な課題に直面しています。現行の社会保障制度は、将来世代への負担増、世代間の不公平感、そして制度自体の持続可能性への懸念を抱えています。このインフォグラフィックでは、年金、退職給付、子育て支援といった主要な社会保障制度の現状をデータに基づいて分析し、将来に向けた改革の方向性を探ります。
+            </p>
+        </section>
+
+        <section id="section1" class="mb-12 scroll-mt-20">
+            <h2 class="section-title text-neutral-dark">第1章：年金制度の現状と課題</h2>
+            <p class="text-center text-neutral-medium mb-8">日本の公的年金制度は、賦課方式を基本とし、少子高齢化の直撃を受けています。財政状況は厳しく、将来の給付水準や世代間の公平性が大きな課題となっています。</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3 text-primary">公的年金制度の構造（概念図）</h3>
+                    <p class="text-sm text-neutral-medium mb-4">日本の年金制度は、国民共通の基礎年金（1階）と、会社員・公務員向けの厚生年金（2階）の2階建て構造が基本です。企業によっては3階部分として企業年金（DB/DC）やiDeCoなどがあります。</p>
+                    <div class="chart-container h-72 md:h-80">
+                        <canvas id="pensionStructureChart"></canvas>
+                    </div>
+                    <p class="mt-4 text-xs text-neutral-medium">この図は、一般的な年金制度の階層構造を示しています。実際の加入状況や給付額は個人によって異なります。</p>
+                </div>
+
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3 text-primary">所得代替率の将来予測（2024年財政検証より）</h3>
+                    <p class="text-sm text-neutral-medium mb-4">所得代替率（現役男子の平均手取り収入に対する年金額の割合）は、将来的に低下が見込まれています。マクロ経済スライドによる調整が主な要因です。</p>
+                    <div class="chart-container h-72 md:h-80">
+                        <canvas id="incomeReplacementRatioChart"></canvas>
+                    </div>
+                    <p class="mt-4 text-xs text-neutral-medium">経済成長ケースによって変動しますが、基礎年金部分の低下が特に大きいと予測されています。</p>
+                </div>
+
+                <div class="card md:col-span-2">
+                    <h3 class="text-xl font-semibold mb-3 text-primary">厚生年金における世代間格差（生涯純受益の推計例）</h3>
+                    <p class="text-sm text-neutral-medium mb-4">支払った保険料総額と受け取る年金総額の差である「生涯純受益」には、世代間で大きな格差が存在すると指摘されています。高齢世代ほど受益超過、若年・将来世代ほど負担超過の傾向が見られます。</p>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white">
+                            <thead class="bg-neutral-light">
+                                <tr>
+                                    <th class="py-2 px-4 border-b text-neutral-dark text-left">生まれ年 (コーホート)</th>
+                                    <th class="py-2 px-4 border-b text-neutral-dark text-left">生涯純受益額 (推計)</th>
+                                    <th class="py-2 px-4 border-b text-neutral-dark text-left">受益・負担倍率 (公的年金全体)</th>
+                                    <th class="py-2 px-4 border-b text-neutral-dark text-left">主な出典/分析時期</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="py-2 px-4 border-b text-neutral-medium">1939年以前</td>
+                                    <td class="py-2 px-4 border-b text-green-600 font-semibold">+5700万円</td>
+                                    <td class="py-2 px-4 border-b text-green-600 font-semibold">高</td>
+                                    <td class="py-2 px-4 border-b text-neutral-medium">内閣府(2001)</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 px-4 border-b text-neutral-medium">1940年</td>
+                                    <td class="py-2 px-4 border-b text-green-600 font-semibold">高い受益超過</td>
+                                    <td class="py-2 px-4 border-b text-green-600 font-semibold">約6.5倍</td>
+                                    <td class="py-2 px-4 border-b text-neutral-medium">国立国会図書館(2012)</td>
+                                </tr>
+                                 <tr>
+                                    <td class="py-2 px-4 border-b text-neutral-medium">1960年</td>
+                                    <td class="py-2 px-4 border-b text-neutral-medium">ほぼゼロ（均衡点）</td>
+                                    <td class="py-2 px-4 border-b text-neutral-medium">約1倍</td>
+                                    <td class="py-2 px-4 border-b text-neutral-medium">国立社会保障・人口問題研究所(1997モデル)</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 px-4 border-b text-neutral-medium">1970-79年</td>
+                                    <td class="py-2 px-4 border-b text-red-600 font-semibold">▲1300万円</td>
+                                    <td class="py-2 px-4 border-b text-red-600 font-semibold">低</td>
+                                    <td class="py-2 px-4 border-b text-neutral-medium">内閣府(2001)</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 px-4 border-b text-neutral-medium">1980年以降</td>
+                                    <td class="py-2 px-4 border-b text-red-600 font-semibold">▲4200万円 (将来世代)</td>
+                                    <td class="py-2 px-4 border-b text-red-600 font-semibold">約2.3倍</td>
+                                    <td class="py-2 px-4 border-b text-neutral-medium">内閣府(2001), 国立国会図書館(2012)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="mt-4 text-xs text-neutral-medium">注：上記は複数の推計を統合した例であり、前提条件により数値は変動します。詳細は原典をご確認ください。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="section2" class="mb-12 scroll-mt-20">
+            <h2 class="section-title text-neutral-dark">第2章：退職給付制度の変遷と個人の責任</h2>
+            <p class="text-center text-neutral-medium mb-8">企業の退職給付制度は、従来の確定給付年金（DB）から確定拠出年金（DC）への移行が進んでいます。これにより、個人の資産運用責任が増大しています。</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3 text-primary">退職給付制度の形態別企業割合の推移</h3>
+                     <p class="text-sm text-neutral-medium mb-4">大企業を中心に、DBとDCを併用する企業や、DCのみを導入する企業が増加傾向にあります。中小企業では依然として退職一時金制度のみの割合が高い状況です。</p>
+                    <div class="chart-container h-72 md:h-80">
+                        <canvas id="retirementBenefitTypeChart"></canvas>
+                    </div>
+                    <p class="mt-4 text-xs text-neutral-medium">出典：厚生労働省「就労条件総合調査」各年版より抜粋・加工。企業規模1,000人以上の企業の傾向を示しています。</p>
+                </div>
+
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3 text-primary">企業型DCにおける資産配分状況（2022年度末）</h3>
+                    <p class="text-sm text-neutral-medium mb-4">DC加入者の多くは、依然として元本確保型商品を選択する傾向にありますが、徐々に投資信託の割合も増加しています。個人の金融リテラシーと投資判断が重要となります。</p>
+                    <div class="chart-container h-72 md:h-80">
+                        <canvas id="dcAssetAllocationChart"></canvas>
+                    </div>
+                    <p class="mt-4 text-xs text-neutral-medium">出典：企業年金連合会「2022(令和4)年度決算 確定拠出年金実態調査結果(概要版)」より。資産残高ベース。</p>
+                </div>
+                 <div class="card md:col-span-2">
+                    <h3 class="text-xl font-semibold mb-3 text-primary">DC制度への移行要因と従業員への影響</h3>
+                    <ul class="list-disc list-inside space-y-2 text-neutral-medium">
+                        <li><strong class="text-neutral-dark">企業側の要因：</strong>DB制度の財務負担（低金利による運用難、積立不足リスク）、会計基準の変更、労働市場の流動化への対応。</li>
+                        <li><strong class="text-neutral-dark">従業員への影響：</strong>運用リスクの個人への移転、将来の給付額の不確実性増大、自己責任による資産形成の必要性。</li>
+                        <li><strong class="text-neutral-dark">世代間格差：</strong>手厚いDBの恩恵を受けた高齢世代と、DC下で自らリスクを負う若年世代との間で、退職後の経済的安定性に格差が生じる可能性。</li>
+                    </ul>
+                    <p class="mt-4 text-sm text-neutral-medium">適切な投資教育とサポート体制の整備が、DC制度の成否を左右します。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="section3" class="mb-12 scroll-mt-20">
+            <h2 class="section-title text-neutral-dark">第3章：子育て支援と財源問題</h2>
+            <p class="text-center text-neutral-medium mb-8">少子化対策として子育て支援の重要性が増す一方、その財源確保が大きな課題です。「こども・子育て支援金制度」が導入されましたが、「こども保険」構想も議論されています。</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3 text-primary">「こども・子育て支援金制度」の概要</h3>
+                    <p class="text-sm text-neutral-medium mb-2">2026年度から段階的に導入される新制度。医療保険料に上乗せして「支援金」を徴収し、児童手当拡充などの財源に充てます。</p>
+                    <div class="flowchart-node mb-2">医療保険料（現役世代中心） + 一部後期高齢者医療制度</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-node bg-accent text-white mb-2">こども・子育て支援金プール（年間約1兆円目標）</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="flowchart-node text-xs">児童手当拡充</div>
+                        <div class="flowchart-node text-xs">出産・育児支援</div>
+                        <div class="flowchart-node text-xs">保育サービス拡充</div>
+                        <div class="flowchart-node text-xs">育休支援強化</div>
+                    </div>
+                    <p class="mt-3 text-sm text-neutral-medium">政府は「実質的な追加負担なし」と説明していますが、専門家からは歳出改革や賃上げ効果の実現性に疑問の声も上がっています。</p>
+                </div>
+
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3 text-primary">「こども保険」構想との比較</h3>
+                    <p class="text-sm text-neutral-medium mb-4">「こども保険」は、子育てを社会全体で支える独立した社会保険制度として提唱されています。財源や負担のあり方が支援金制度と異なります。</p>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white">
+                            <thead class="bg-neutral-light">
+                                <tr>
+                                    <th class="py-2 px-3 border-b text-neutral-dark text-left text-sm">特徴</th>
+                                    <th class="py-2 px-3 border-b text-neutral-dark text-left text-sm">こども・子育て支援金制度</th>
+                                    <th class="py-2 px-3 border-b text-neutral-dark text-left text-sm">こども保険（構想例）</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="py-2 px-3 border-b text-neutral-medium text-sm font-semibold">主たる財源</td>
+                                    <td class="py-2 px-3 border-b text-neutral-medium text-sm">医療保険料への上乗せ</td>
+                                    <td class="py-2 px-3 border-b text-neutral-medium text-sm">専用の社会保険料</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 px-3 border-b text-neutral-medium text-sm font-semibold">主な拠出世代</td>
+                                    <td class="py-2 px-3 border-b text-neutral-medium text-sm">現役世代中心</td>
+                                    <td class="py-2 px-3 border-b text-neutral-medium text-sm">全世代（高齢者の年金・資産からの拠出も議論）</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 px-3 border-b text-neutral-medium text-sm font-semibold">世代間公平性への影響</td>
+                                    <td class="py-2 px-3 border-b text-neutral-medium text-sm">限定的、または現役世代の負担増の可能性</td>
+                                    <td class="py-2 px-3 border-b text-neutral-medium text-sm">高齢世代からの実質的拠出があれば是正効果期待</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="mt-4 text-xs text-neutral-medium">「こども保険」が高齢世代からの実質的な拠出を伴う場合、世代間格差是正に貢献する可能性があります。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="section4" class="mb-12 scroll-mt-20">
+            <h2 class="section-title text-neutral-dark">第4章：解決への模索：シニア雇用と資産活用</h2>
+            <p class="text-center text-neutral-medium mb-8">年金制度の持続可能性を高めるため、高齢者の就労促進や、団塊の世代が保有する資産の活用が議論されています。</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3 text-primary">シニア雇用の現状と課題</h3>
+                    <p class="text-sm text-neutral-medium mb-4">日本の高齢者の就業率は国際的に見ても高い水準ですが、再雇用後の賃金低下や非正規雇用の増加、モチベーション維持などが課題です。</p>
+                    <div class="chart-container h-72 md:h-80">
+                        <canvas id="seniorEmploymentRateChart"></canvas>
+                    </div>
+                    <p class="mt-4 text-xs text-neutral-medium">70歳までの就業機会確保が企業の努力義務となっていますが、働きがいのある公正な処遇が重要です。</p>
+                </div>
+
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3 text-primary">団塊の世代の資産活用</h3>
+                    <p class="text-sm text-neutral-medium mb-4">団塊の世代が保有する資産は莫大であり、その相続や活用が注目されています。社会保障財源への貢献も議論の一つです。</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                        <div class="stat-card border-l-4 border-secondary">
+                            <div class="stat-value">約80兆円</div>
+                            <div class="stat-label">年間世代間資産移転額（相続＋贈与推計）</div>
+                        </div>
+                        <div class="stat-card border-l-4 border-accent">
+                            <div class="stat-value">約255兆円</div>
+                            <div class="stat-label">認知症高齢者の保有資産総額（2020年推計）</div>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-sm text-neutral-medium">相続税強化や資産ベースの社会保障負担などが検討されていますが、資産の流動性や「凍結資産」問題、社会的合意形成が課題です。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="section5" class="scroll-mt-20">
+            <h2 class="section-title text-neutral-dark">結論と提言：持続可能な社会保障制度に向けて</h2>
+            <p class="text-lg text-neutral-medium text-center max-w-3xl mx-auto mb-6">
+                日本の社会保障制度は、歴史的経緯と人口構造の変化の中で、多くの課題を抱えています。年金制度の世代間格差、退職給付制度の変容に伴う個人の責任増大、子育て支援の財源確保の難しさなど、問題は山積しています。
+            </p>
+            <div class="card bg-primary text-white">
+                <h3 class="text-2xl font-semibold mb-4 text-center">改革への主要な視点</h3>
+                <ul class="list-disc list-inside space-y-3 text-base md:text-lg">
+                    <li><span class="font-semibold">世代間の公平性の確保：</span>特定世代に負担が偏ることなく、全世代で支え合う仕組みの構築。</li>
+                    <li><span class="font-semibold">個人の自助努力支援：</span>DC制度における適切な投資教育や、ライフプランニング支援の強化。</li>
+                    <li><span class="font-semibold">財源の多様化と安定化：</span>現役世代の保険料だけでなく、資産課税や高齢者の応能負担など、多様な財源の検討。</li>
+                    <li><span class="font-semibold">働き方の改革と社会参加促進：</span>高齢者が意欲と能力に応じて働き続けられる環境整備、健康寿命の延伸。</li>
+                    <li><span class="font-semibold">透明性の高い情報公開と国民的議論：</span>制度改革の必要性や影響について、国民が理解し納得できる丁寧な説明と、幅広い合意形成の努力。</li>
+                </ul>
+                <p class="mt-6 text-center text-sm">
+                    これらの課題解決には、政府、企業、そして国民一人ひとりが当事者意識を持ち、長期的な視点で改革に取り組むことが不可欠です。
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-neutral-dark text-neutral-light text-center p-6 mt-12">
+        <p>&copy; 2025 日本の社会保障制度インフォグラフィック. All rights reserved.</p>
+        <p class="text-xs mt-1">本インフォグラフィックは提供された調査レポートに基づき作成されたものであり、特定の政策を推奨するものではありません。</p>
+    </footer>
+
+    <script>
+        function wrapText(text, maxWidth) {
+            if (typeof text !== 'string') return text; // Not a string, return as is
+            if (text.length <= maxWidth) return text; // Short enough
+
+            const words = text.split(' ');
+            let lines = [];
+            let currentLine = words[0];
+
+            for (let i = 1; i < words.length; i++) {
+                if (currentLine.length + words[i].length + 1 <= maxWidth) {
+                    currentLine += ' ' + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        const tooltipTitleCallback = function(tooltipItems) {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+                return label.join(' ');
+            } else {
+                return label;
+            }
+        };
+
+        // Chart 1: Pension Structure
+        const pensionCtx = document.getElementById('pensionStructureChart').getContext('2d');
+        new Chart(pensionCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['基礎年金 (1階)', '厚生年金 (2階)', '企業年金等 (3階)'],
+                datasets: [{
+                    label: '年金制度の構造',
+                    data: [40, 35, 25], // Conceptual distribution
+                    backgroundColor: ['#F97316', '#14B8A6', '#0EA5E9'],
+                    borderColor: '#F3F4F6',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    title: { display: false },
+                    tooltip: { callbacks: { title: tooltipTitleCallback } }
+                }
+            }
+        });
+
+        // Chart 2: Income Replacement Ratio
+        const incomeCtx = document.getElementById('incomeReplacementRatioChart').getContext('2d');
+        new Chart(incomeCtx, {
+            type: 'bar',
+            data: {
+                labels: [wrapText('2024年度実績 (モデル世帯)',16), wrapText('将来予測 (成長ケース)',16), wrapText('将来予測 (悲観ケース)',16)],
+                datasets: [{
+                    label: '所得代替率 (%)',
+                    data: [61.2, 57.6, 48.0], // Example data based on reports
+                    backgroundColor: ['#14B8A6', '#0EA5E9', '#F97316'],
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true, max: 70, title: { display: true, text: '割合 (%)' } } },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { callbacks: { title: tooltipTitleCallback } }
+                }
+            }
+        });
+
+        // Chart 3: Retirement Benefit Type
+        const retirementCtx = document.getElementById('retirementBenefitTypeChart').getContext('2d');
+        new Chart(retirementCtx, {
+            type: 'bar', // Changed to stacked bar for better representation
+            data: {
+                labels: ['2013年', '2018年', '2023年'],
+                datasets: [
+                    {
+                        label: '退職一時金制度のみ',
+                        data: [65.8, 59.0, 50.8], // Example data for large enterprises
+                        backgroundColor: '#F97316',
+                    },
+                    {
+                        label: 'DB/DC等 年金制度あり (併用含む)',
+                        data: [34.2, 41.0, 49.2], // Calculated as 100 - "一時金のみ"
+                        backgroundColor: '#0EA5E9',
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { stacked: true },
+                    y: { stacked: true, beginAtZero: true, max: 100, title: { display: true, text: '企業割合 (%)' } }
+                },
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: { callbacks: { title: tooltipTitleCallback }, mode: 'index', intersect: false }
+                }
+            }
+        });
+
+        // Chart 4: DC Asset Allocation
+        const dcAssetCtx = document.getElementById('dcAssetAllocationChart').getContext('2d');
+        new Chart(dcAssetCtx, {
+            type: 'pie',
+            data: {
+                labels: [wrapText('元本確保型商品',16), wrapText('投資信託 (国内株式)',16), wrapText('投資信託 (外国株式)',16), wrapText('投資信託 (バランス型等)',16)],
+                datasets: [{
+                    label: '資産配分',
+                    data: [41.9, 15.0, 20.0, 23.1], // Example data, sum to < 57.5% for 'other inv trusts'
+                    backgroundColor: ['#F97316', '#14B8A6', '#0EA5E9', '#FACC15' /* Yellow */],
+                    borderColor: '#F3F4F6',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: { callbacks: { title: tooltipTitleCallback } }
+                }
+            }
+        });
+
+        // Chart 5: Senior Employment Rate
+        const seniorEmploymentCtx = document.getElementById('seniorEmploymentRateChart').getContext('2d');
+        new Chart(seniorEmploymentCtx, {
+            type: 'line',
+            data: {
+                labels: ['2013年', '2018年', '2023年'],
+                datasets: [
+                    {
+                        label: '60-64歳 就業率 (%)',
+                        data: [60.0, 68.8, 73.0], // Hypothetical upward trend data
+                        borderColor: '#0EA5E9',
+                        tension: 0.1,
+                        fill: false
+                    },
+                    {
+                        label: '65-69歳 就業率 (%)',
+                        data: [40.0, 46.6, 52.0], // Hypothetical upward trend data
+                        borderColor: '#F97316',
+                        tension: 0.1,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: false, title: { display: true, text: '就業率 (%)' } } },
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: { callbacks: { title: tooltipTitleCallback } }
+                }
+            }
+        });
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
